@@ -46,3 +46,4 @@ end
 #json format
 gem 'active_model_serializers'
 
+gem 'rest-client'
