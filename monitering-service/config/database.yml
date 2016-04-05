@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: monitering-service_production
-  username: monitering-service
-  password: <%= ENV['MONITERING-SERVICE_DATABASE_PASSWORD'] %>
+  #username: monitering-service
+  #password: <%= ENV['MONITERING-SERVICE_DATABASE_PASSWORD'] %>
