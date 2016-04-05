@@ -18,7 +18,7 @@ class TransactionsController < ApplicationController
 		@transaction.time = params[:time]
 		@transaction.license_no = params[:license_no]
 		
-=begin
+
 		respond_to do |format|
 			if @transaction.save
 				format.json{ render json: @transaction, status: :created }
@@ -26,7 +26,7 @@ class TransactionsController < ApplicationController
 				format.json{ render json: @transaction.errors, status: :unprocessable_entity }
 			end
 		end
-=end
+
 	end
 
 	#DELETE /transactions/remove_all_data
