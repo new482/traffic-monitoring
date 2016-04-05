@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   
   ##For setup default routes
-  #resources :transactions
+  resources :transactions
   #defaults: { format: 'json' }
 
   post 'transactions/set_vehicle_data.json' => 'transactions#set_vehicle_data'
