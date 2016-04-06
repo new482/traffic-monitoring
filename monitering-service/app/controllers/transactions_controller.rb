@@ -14,9 +14,11 @@ class TransactionsController < ApplicationController
 	#POST /transactions/set_vehicle_data.json
 	def set_vehicle_data
 
-		respond_to do |format|
-			format.json{ render status: :created }
-		end
+		#respond_to do |format|
+		#	format.json{ render status: :created }
+		#end
+
+		render :status => 200
 
 =begin
 		@transaction = Transaction.new
@@ -53,8 +55,8 @@ class TransactionsController < ApplicationController
 		#render :nothing => true, :status => 406 unless params[:format] == 'json' || request.headers["Accept"] =~ /json/
 	end
 
-	private
-		def transaction_params
-			params.require(:transaction).permit(:location, :time, :license_no)
-		end
+	#private
+	#	def transaction_params
+	#		params.require(:transaction).permit(:location, :time, :license_no)
+	#	end
 end
