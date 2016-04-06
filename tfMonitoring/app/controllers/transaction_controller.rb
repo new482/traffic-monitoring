@@ -14,11 +14,11 @@ class TransactionController < ApplicationController
 	#POST /transactions/set_vehicle_data.json
 	def set_vehicle_data
 
-		#respond_to do |format|
-		#	format.json{ render status: :created }
-		#end
+		render :status => 200, :text => 'JSON was received', :content_type => 'text/html'
 
-		render :status => 200
+		#respond_to do |format|
+		#	format.json{ render :status => 200 }
+		#end
 
 =begin
 		@transaction = Transaction.new
@@ -50,7 +50,7 @@ class TransactionController < ApplicationController
 		#return if request.format != :json
 		#	render	:nothing => true, :status => 406
 		if request.content_type != 'application/json'
-			render :text => 'Only JSON is acceptable.', :status => 406
+			render :text => 'Only JSON is acceptable!!!!!!', :status => 406
 		end
 		#render :nothing => true, :status => 406 unless params[:format] == 'json' || request.headers["Accept"] =~ /json/
 	end
