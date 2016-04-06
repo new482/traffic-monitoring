@@ -13,6 +13,12 @@ class TransactionsController < ApplicationController
 
 	#POST /transactions/set_vehicle_data.json
 	def set_vehicle_data
+
+		respond_to do |format|
+			format.json{ render status: :created }
+		end
+
+=begin
 		@transaction = Transaction.new
 		@transaction.location = params[:location]
 		@transaction.time = params[:time]
@@ -26,7 +32,7 @@ class TransactionsController < ApplicationController
 				format.json{ render json: @transaction.errors, status: :unprocessable_entity }
 			end
 		end
-
+=end
 	end
 
 	#DELETE /transactions/remove_all_data
