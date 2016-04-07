@@ -50,7 +50,7 @@ class TransactionController < ApplicationController
 		#return if request.format != :json
 		#	render	:nothing => true, :status => 406
 		if request.content_type != 'application/json'
-			render :text => 'Only JSON is acceptable!!!!!!', :status => 406
+			render :text => 'Wrong FORMAT - Only JSON is acceptable', :status => 406
 		end
 		#render :nothing => true, :status => 406 unless params[:format] == 'json' || request.headers["Accept"] =~ /json/
 	end
