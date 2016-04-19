@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TransactionControllerTest < ActionController::TestCase
+class TransactionTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

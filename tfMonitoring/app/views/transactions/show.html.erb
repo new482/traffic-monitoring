@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @transaction.location %>
+</p>
+
+<p>
+  <strong>Time:</strong>
+  <%= @transaction.time %>
+</p>
+
+<p>
+  <strong>License no:</strong>
+  <%= @transaction.license_no %>
+</p>
+
+<%= link_to 'Edit', edit_transaction_path(@transaction) %> |
+<%= link_to 'Back', transactions_path %>

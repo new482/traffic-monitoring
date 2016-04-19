@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
 
-  post 'transaction/set_vehicle_data.json' => 'transaction#set_vehicle_data'
-  get 'transaction/get_vehicle_data.json' => 'transaction#get_vehicle_data'
-  delete 'transaction/remove_all_data' => 'transaction#remove_all_data'
+  resources :transactions
+
+  post 'transaction/set_vehicle_data.json' => 'transactions#set_vehicle_data'
+
+  #get 'transaction/get_vehicle_data.json' => 'transaction#get_vehicle_data'
+  #delete 'transaction/remove_all_data' => 'transaction#remove_all_data'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
