@@ -17,7 +17,7 @@ class TransactionsController < ApplicationController
       @sendText = @existingRecord.location.to_s+'-'+params[:location]+'|'+params[:license_no]+'|'+@existingRecord.time.to_s
 
       # Send POST request to Flume on Hadoop Master
-      RestClient.post 'http://192.168.1.11:5140',{'route' => @existingRecord.location.to_s+'-'+params[:location], 'license_no' => @existingRecord.license_no.to_s, 'time' => @existingRecord.time.to_s}.to_json, :content_type => :json
+      RestClient.post 'http://hadoop-master:5140',{'route' => @existingRecord.location.to_s+'-'+params[:location], 'license_no' => @existingRecord.license_no.to_s, 'time' => @existingRecord.time.to_s}.to_json, :content_type => :json
 
       @existingRecord.delete
 
