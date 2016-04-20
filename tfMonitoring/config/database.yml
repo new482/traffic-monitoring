@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: tfMonitoring_production
-  username: tfMonitoring
+  username: ubuntu
   password: <%= ENV['TFMONITORING_DATABASE_PASSWORD'] %>
