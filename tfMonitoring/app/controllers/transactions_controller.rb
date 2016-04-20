@@ -10,19 +10,17 @@ class TransactionsController < ApplicationController
   #POST /transactions/set_vehicle_data.json
   def set_vehicle_data
 
-    @existingLocation=Transaction.select(:location).where('license_no = ?', params[:license_no])
+    @existingRecord=Transaction.where('license_no = ?', params[:license_no]).first
 
-    if !(@existingLocation.blank?)
-      @existingTime = Transaction.select(:time).where('license_no = ?', params[:license_no])
+    if !(@existingRecord.blank?)
 
-      #@sendText = @existingLocation.to_s+'-'+params[:location]+'|'+params[:license_no]+'|'+@existingTime.to_s
+      @sendText = @existingRecord.location.to_s+'-'+params[:location]+'|'+params[:license_no]+'|'+@existingRecord.time.to_s
 
-      RestClient.post("http://10.211.55.3:9482",{:route => @existingLocation.to_s+'-'+params[:location],
-                                         :license_no => params[:license_no],
-                                         :time => @existingTime.to_s},
-                                        :content_type => :json)
+      # Send POST request to Flume on Hadoop Master
+      RestClient.post 'http://192.168.1.11:5140',{'route' => @existingRecord.location.to_s+'-'+params[:location], 'license_no' => @existingRecord.license_no.to_s, 'time' => @existingRecord.time.to_s}.to_json, :content_type => :json
 
-      Transaction.where('license_no = ?', params[:license_no]).delete_all
+      @existingRecord.delete
+
       render :text => 'Data was sent'
     else
       @transaction = Transaction.new(transaction_params)
@@ -39,12 +37,11 @@ class TransactionsController < ApplicationController
   end
 
   def ensure_json_format
-    #return if request.format != :json
-    #	render	:nothing => true, :status => 406
+
     if request.content_type != 'application/json'
       render :text => 'Wrong FORMAT-Only JSON is acceptable', :status => 406
     end
-    #render :nothing => true, :status => 406 unless params[:format] == 'json' || request.headers["Accept"] =~ /json/
+
   end
 
   # GET /transactions
