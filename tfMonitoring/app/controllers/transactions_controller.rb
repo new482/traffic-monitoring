@@ -18,7 +18,7 @@ class TransactionsController < ApplicationController
 
       # Send POST request to Flume on Hadoop Master
       var = '[{"headers":{"host":"web"},"body":"cam001-cam002|กก1234|2016-04-04 03:55:04"}]'
-      RestClient.post 'http://localhost:5140', var, {:content_type => :json}
+      RestClient.post 'http://localhost:5140', var, :content_type => :json
 
 	render :text => 'Data was sent :'
       @existingRecord.delete
