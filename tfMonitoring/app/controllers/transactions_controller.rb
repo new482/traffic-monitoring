@@ -21,9 +21,11 @@ class TransactionsController < ApplicationController
       route = @existingRecord.location.to_s+'-'+params[:location]
       license_no = params[:license_no]
       time = @existingRecord.time.to_s
-      RestClient.post 'http://localhost:5140', [{"headers" => {"host"=>"web"},"body" => ""+route+"|"+license_no+"|"+time+""}].to_json, :content_type => :json
+      var = route+'|'+license_no+'|'+time
+      #RestClient.post 'http://localhost:5140', [{"headers" => {"host"=>"web"},"body" => ""+route+"|"+license_no+"|"+time+""}].to_json, :content_type => :json
 
-	render :text => 'Data was sent :'
+      RestClient.post('http://localhost:5140', [{:headers => {:host => 'web'}, :body => var}].to_json)
+	  render :text => 'Data was sent :'
       @existingRecord.delete
 
     else
