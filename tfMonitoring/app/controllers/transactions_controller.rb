@@ -6,6 +6,8 @@ class TransactionsController < ApplicationController
   protect_from_forgery with: :null_session, only: Proc.new { |c| c.request.format.json? }
 
   require 'rest-client'
+  require "rubygems"
+  require "hbase-rb"
 
   #POST /transactions/set_vehicle_data.json
   def set_vehicle_data
@@ -14,18 +16,13 @@ class TransactionsController < ApplicationController
 
     if !(@existingRecord.blank?)
 
-      #@sendText = @existingRecord.location.to_s+'-'+params[:location]+'|'+params[:license_no]+'|'+@existingRecord.time.to_s
-
       # Send POST request to Flume on Hadoop Master
-      #var = '[{"headers":{"host":"web"},"body":"cam001-cam002|กก1234|2016-04-04 03:55:04"}]'
       route = @existingRecord.location.to_s+'-'+params[:location]
       license_no = params[:license_no]
       time = @existingRecord.time.to_s
       var = route+'|'+license_no+'|'+time
-      #RestClient.post 'http://localhost:5140', [{"headers" => {"host"=>"web"},"body" => ""+route+"|"+license_no+"|"+time+""}].to_json, :content_type => :json
-
       RestClient.post('http://localhost:5140', [{:headers => {:host => 'web'}, :body => var}].to_json)
-	  render :text => 'Data was sent :'
+	    render :text => 'Data was sent :'
       @existingRecord.delete
 
     else
@@ -53,7 +50,11 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @transactions = Transaction.all
+    #@transactions = Transaction.all
+
+
+
+
   end
 
   # GET /transactions/1

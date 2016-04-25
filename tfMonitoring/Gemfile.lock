@@ -54,6 +54,8 @@ GEM
     execjs (2.6.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
+    hbase-rb (0.90.4.pre2)
+      thrift (>= 0.7.0)
     i18n (0.7.0)
     jbuilder (2.4.1)
       activesupport (>= 3.0.0, < 5.1)
@@ -133,6 +135,7 @@ GEM
       ref
     thor (0.19.1)
     thread_safe (0.3.5)
+    thrift (0.9.3.0)
     tilt (2.0.2)
     turbolinks (2.5.3)
       coffee-rails
@@ -152,6 +155,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
+  hbase-rb
   jbuilder (~> 2.0)
   jquery-rails
   pg

@@ -1,0 +1,12 @@
+defaults: &defaults
+  host: 192.168.2.65 # No 'http', it's a Thrift connection
+  port: 9000
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
