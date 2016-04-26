@@ -6,8 +6,8 @@ class TransactionsController < ApplicationController
   protect_from_forgery with: :null_session, only: Proc.new { |c| c.request.format.json? }
 
   require 'rest-client'
-  require "rubygems"
-  require "hbase-rb"
+  #require "rubygems"
+  #require "hbase-rb"
 
   #POST /transactions/set_vehicle_data.json
   def set_vehicle_data
@@ -51,7 +51,6 @@ class TransactionsController < ApplicationController
   # GET /transactions.json
   def index
     #@transactions = Transaction.all
-
 
 
 
