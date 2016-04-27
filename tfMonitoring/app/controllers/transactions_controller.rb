@@ -6,9 +6,8 @@ class TransactionsController < ApplicationController
   protect_from_forgery with: :null_session, only: Proc.new { |c| c.request.format.json? }
 
   require 'rest-client'
-  #require "rubygems"
-  #require "hbase-rb"
-  require 'massive_record'
+  require 'hbase_thrift_ruby'
+
   #POST /transactions/set_vehicle_data.json
   def set_vehicle_data
 
@@ -51,8 +50,16 @@ class TransactionsController < ApplicationController
   # GET /transactions.json
   def index
     #@transactions = Transaction.all
+    host = '10.211.55.3'
+    port = 9090
 
+    socket = Thrift::Socket.new(host, port)
+    transport = Thrift::BufferedTransport.new(socket)
+    transport.open
+    protocol = Thrift::BinaryProtocol.new(transport)
 
+    hbaseClient = HBase::Client.new(protocol)
+    @client = hbaseClient.getTableNames
 
   end
 

@@ -1,7 +1,14 @@
 source 'https://rubygems.org'
 
 #gem 'hbase-rb'
-gem 'massive_record'
+#gem 'massive_record'
+#gem 'hbase-jruby'
+#gem 'hbase-stargate'
+
+gem 'bootstrap-sass'
+gem 'autoprefixer-rails'
+
+gem 'hbase_thrift_ruby', '~> 0.9.0'
 
 gem 'rest-client'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
