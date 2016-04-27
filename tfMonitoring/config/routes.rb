@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
   resources :transactions
 
+  root 'transactions#index'
+
   post 'transaction/set_vehicle_data.json' => 'transactions#set_vehicle_data'
 
   #get 'transaction/get_vehicle_data.json' => 'transaction#get_vehicle_data'

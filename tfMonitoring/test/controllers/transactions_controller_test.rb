@@ -1,9 +1,6 @@
 require 'test_helper'
 
 class TransactionsControllerTest < ActionController::TestCase
-  setup do
-    @transaction = transactions(:one)
-  end
 
   test "should get index" do
     get :index
@@ -11,6 +8,17 @@ class TransactionsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:transactions)
   end
 
+
+
+=begin
+  setup do
+    @transaction = transactions(:one)
+  end
+=end
+
+
+
+=begin
   test "should get new" do
     get :new
     assert_response :success
@@ -45,5 +53,6 @@ class TransactionsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to transactions_path
-  end
+    end
+=end
 end
