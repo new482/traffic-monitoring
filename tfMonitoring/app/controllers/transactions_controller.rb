@@ -8,7 +8,7 @@ class TransactionsController < ApplicationController
   require 'rest-client'
   #require "rubygems"
   #require "hbase-rb"
-
+  require 'massive_record'
   #POST /transactions/set_vehicle_data.json
   def set_vehicle_data
 
