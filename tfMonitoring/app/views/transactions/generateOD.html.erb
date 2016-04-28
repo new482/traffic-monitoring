@@ -1,0 +1,21 @@
+
+<table class="table table-bordered">
+  <thead>
+  <tr>
+    <th>OD Matrix</th>
+    <% for i in 0..@a.size-1 %>
+        <th><%= @a[i] %></th>
+    <% end %>
+  </tr>
+  </thead>
+  <tbody>
+    <% for i in 0..@a.size-1 %>
+      <tr>
+        <th scope="row"><%= @a[i] %></th>
+        <% for j in 0..@a.size-1 %>
+            <td><%= @hash[@a[i]+"-"+@a[j]].to_s + '/' + @hash[@a[j]+"-"+@a[i]].to_s %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
