@@ -52,7 +52,6 @@ class TransactionsController < ApplicationController
 
   def generateOD
 
-    @a = ['cam001','cam002','cam003']
 
     temp1 = params[:rangeFrom].split('/')
     temp2 = params[:rangeTo].split('/')
@@ -60,33 +59,16 @@ class TransactionsController < ApplicationController
     dateFrom = temp1[2].to_s+'-'+temp1[0].to_s+'-'+temp1[1].to_s
     dateTo = temp2[2].to_s+'-'+temp2[0].to_s+'-'+temp2[1].to_s
 
-
+    # Return all the route in the request range from Hbase
     getRange = $hbaseClient.get("hbase_hive", ["*"], "SingleColumnValueFilter('cf', 'time', "'>='", 'binary:#{dateFrom}') AND "+
               "SingleColumnValueFilter('cf', 'time', "'<='", 'binary:#{dateTo}')", {})
 
-    @hash = doSumHash(getRange)
-=begin
-    @table = '<table><tr><td>OD Matrix</td>'
-    for i in 0..a.size-1
-      @table = @table + '<td>#{a[i]}</td>'
-    end
-
-    @table = @table + '</tr>'
-
-    for i in 0..a.size-1
-      @table = @table + '<tr> <td> #{a[i]} </td>'
-
-      for j in 0..a.size-1
-        @table = @table + '<td> #{@hash[a[i]+"-"+a[j]]} / #{@hash[a[j]+"-"+a[i]]} </td>'
-      end
-
-      @table = @table + '</tr>'
-    end
-    @table = @table + '</table>'
-=end
+    @hash = doSumHash(getRange) # Initiate Hash table to print in the dynamic OD table
+    @a = doArrayEndPoint(getRange) # Initiate number of entrypoint in the dynamic OD table
 
   end
 
+  # Do Group by and Count for each entrypoint from Hbase
   def doSumHash(range)
     sumTable = Hash.new
 
@@ -97,8 +79,21 @@ class TransactionsController < ApplicationController
         sumTable[range[i][1]] = sumTable[range[i][1]].to_i + range[i][0].to_i
       end
     end
-    return sumTable
 
+    return sumTable
+  end
+
+  def doArrayEndPoint(range)
+    tmp = Array.new
+
+    for i in 0..range.size-1
+      var = range[i][1].split('-')[0]
+      if tmp.index(var).nil?
+        tmp << var
+      end
+    end
+
+    return tmp
   end
 
   # GET /transactions
