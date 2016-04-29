@@ -22,7 +22,7 @@ class TransactionsController < ApplicationController
       license_no = params[:license_no]
       time = @existingRecord.time.to_s
       var = route+'|'+license_no+'|'+time
-      RestClient.post('http://localhost:5140', [{:headers => {:host => 'web'}, :body => var}].to_json)
+      RestClient.post('10.211.55.3:5140', [{:headers => {:host => 'web'}, :body => var}].to_json)
 	    render :text => 'Data was sent :'
       @existingRecord.delete
       # end Send
@@ -87,9 +87,14 @@ class TransactionsController < ApplicationController
     tmp = Array.new
 
     for i in 0..range.size-1
-      var = range[i][1].split('-')[0]
-      if tmp.index(var).nil?
-        tmp << var
+      var1 = range[i][1].split('-')[0]
+      var2 = range[i][1].split('-')[1]
+      if tmp.index(var1).nil?
+        tmp << var1
+      end
+
+      if tmp.index(var2).nil?
+        tmp << var2
       end
     end
 

@@ -13,7 +13,7 @@
       <tr>
         <th scope="row"><%= @a[i] %></th>
         <% for j in 0..@a.size-1 %>
-            <td><%= @hash[@a[i]+"-"+@a[j]].to_s + '/' + @hash[@a[j]+"-"+@a[i]].to_s %></td>
+            <td><%= @hash[@a[i]+"-"+@a[j]] %></td>
         <% end %>
       </tr>
     <% end %>
