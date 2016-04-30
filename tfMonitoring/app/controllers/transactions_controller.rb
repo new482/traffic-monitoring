@@ -66,6 +66,11 @@ class TransactionsController < ApplicationController
     @hash = doSumHash(getRange) # Initiate Hash table to print in the dynamic OD table
     @a = doArrayEndPoint(getRange) # Initiate number of entrypoint in the dynamic OD table
 
+    respond_to do |format|
+      format.html {redirect_to @transaction}
+      format.js #render transaction/generateOD.js.erb
+    end
+
   end
 
   # Do Group by and Count for each entrypoint from Hbase
