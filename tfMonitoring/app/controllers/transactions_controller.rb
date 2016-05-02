@@ -8,6 +8,8 @@ class TransactionsController < ApplicationController
   require 'rest-client'
   require 'hbase_thrift_ruby'
 
+  $hbaseClient = ''
+
   #POST /transactions/set_vehicle_data.json
   def set_vehicle_data
 
@@ -23,6 +25,7 @@ class TransactionsController < ApplicationController
       RestClient.post('http://localhost:5140', [{:headers => {:host => 'web'}, :body => var}].to_json)
 	    render :text => 'Data was sent :'
       @existingRecord.delete
+      # end Send
 
     else
       @transaction = Transaction.new(transaction_params)
@@ -46,10 +49,66 @@ class TransactionsController < ApplicationController
 
   end
 
+
+  def generateOD
+
+
+    temp1 = params[:rangeFrom].split('/')
+    temp2 = params[:rangeTo].split('/')
+
+    dateFrom = temp1[2].to_s+'-'+temp1[0].to_s+'-'+temp1[1].to_s
+    dateTo = temp2[2].to_s+'-'+temp2[0].to_s+'-'+temp2[1].to_s
+
+    # Return all the route in the request range from Hbase
+    getRange = $hbaseClient.get("hbase_hive", ["*"], "SingleColumnValueFilter('cf', 'time', "'>='", 'binary:#{dateFrom}') AND "+
+              "SingleColumnValueFilter('cf', 'time', "'<='", 'binary:#{dateTo}')", {})
+
+    @hash = doSumHash(getRange) # Initiate Hash table to print in the dynamic OD table
+    @a = doArrayEndPoint(getRange) # Initiate number of entrypoint in the dynamic OD table
+
+    respond_to do |format|
+      format.html {redirect_to @transaction}
+      format.js #render transaction/generateOD.js.erb
+    end
+
+  end
+
+  # Do Group by and Count for each entrypoint from Hbase
+  def doSumHash(range)
+    sumTable = Hash.new
+
+    for i in 0..range.size-1
+      if sumTable[range[i][1]].nil?
+          sumTable[range[i][1]] = range[i][0].to_i
+      else
+        sumTable[range[i][1]] = sumTable[range[i][1]].to_i + range[i][0].to_i
+      end
+    end
+
+    return sumTable
+  end
+
+  def doArrayEndPoint(range)
+    tmp = Array.new
+
+    for i in 0..range.size-1
+      var1 = range[i][1].split('-')[0]
+      var2 = range[i][1].split('-')[1]
+      if tmp.index(var1).nil?
+        tmp << var1
+      end
+
+      if tmp.index(var2).nil?
+        tmp << var2
+      end
+    end
+
+    return tmp
+  end
+
   # GET /transactions
   # GET /transactions.json
   def index
-    #@transactions = Transaction.all
     host = '192.168.1.11'
     port = 9090
 
@@ -58,8 +117,9 @@ class TransactionsController < ApplicationController
     transport.open
     protocol = Thrift::BinaryProtocol.new(transport)
 
-    hbaseClient = HBase::Client.new(protocol)
-    @client = hbaseClient.getTableNames
+    $hbaseClient = HBase::Client.new(protocol)
+    @table = $hbaseClient.getTableNames
+
 
   end
 
@@ -67,7 +127,6 @@ class TransactionsController < ApplicationController
   # GET /transactions/1.json
   def show
   end
-
   # GET /transactions/new
   def new
     @transaction = Transaction.new
