@@ -50,7 +50,7 @@ class TransactionsController < ApplicationController
   # GET /transactions.json
   def index
     #@transactions = Transaction.all
-    host = '10.211.55.3'
+    host = '192.168.1.11'
     port = 9090
 
     socket = Thrift::Socket.new(host, port)
