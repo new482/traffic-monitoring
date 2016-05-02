@@ -22,7 +22,7 @@ class TransactionsController < ApplicationController
       license_no = params[:license_no]
       time = @existingRecord.time.to_s
       var = route+'|'+license_no+'|'+time
-      RestClient.post('10.211.55.3:5140', [{:headers => {:host => 'web'}, :body => var}].to_json)
+      RestClient.post('http://localhost:5140', [{:headers => {:host => 'web'}, :body => var}].to_json)
 	    render :text => 'Data was sent :'
       @existingRecord.delete
       # end Send
@@ -110,7 +110,7 @@ class TransactionsController < ApplicationController
   # GET /transactions.json
   def index
 
-    host = '10.211.55.3'
+    host = '192.168.1.11'
     port = 9090
 
     socket = Thrift::Socket.new(host, port)
