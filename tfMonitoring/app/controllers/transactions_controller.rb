@@ -64,7 +64,7 @@ class TransactionsController < ApplicationController
               "SingleColumnValueFilter('cf', 'time', "'<='", 'binary:#{dateTo}')", {})
 
     @hash = doSumHash(getRange) # Initiate Hash table to print in the dynamic OD table
-    @a = doArrayEndPoint(getRange) # Initiate number of entrypoint in the dynamic OD table
+    @a = doArrayEndPoint(getRange) # Initiate number of end-points in the dynamic OD table
 
     respond_to do |format|
       format.html {redirect_to @transaction}
