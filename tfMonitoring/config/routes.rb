@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   post 'transaction/set_vehicle_data.json' => 'transactions#set_vehicle_data'
 
-  #get 'transaction/generateOD' => 'transactions#generateOD'
+  get 'transaction/generateOD' => 'transactions#generateOD'
 
   #get 'transaction/get_vehicle_data.json' => 'transaction#get_vehicle_data'
   #delete 'transaction/remove_all_data' => 'transaction#remove_all_data'
