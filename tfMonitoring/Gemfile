@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'ruby-phoenix', '~> 0.0.8', require: 'phoenix'
+#gem 'ruby-phoenix', '~> 0.0.8', require: 'phoenix'
 
 gem 'bootstrap-datepicker-rails'
 

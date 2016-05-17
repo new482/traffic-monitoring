@@ -67,7 +67,7 @@ class TransactionsController < ApplicationController
     @a = doArrayEndPoint(getRange) # Initiate number of end-points in the dynamic OD table
 
     respond_to do |format|
-      format.html {redirect_to @transaction}
+      #format.html {redirect_to @transaction}
       format.js #render transaction/generateOD.js.erb
     end
 
