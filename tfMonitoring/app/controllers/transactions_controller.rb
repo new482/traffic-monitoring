@@ -109,7 +109,6 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-
     host = '192.168.1.11'
     port = 9090
 
