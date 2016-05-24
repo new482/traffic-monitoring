@@ -86,6 +86,7 @@ class TransactionsController < ApplicationController
     end
 
     return sumTable
+    sumTable.clear
   end
 
   def doArrayEndPoint(range)
@@ -104,6 +105,7 @@ class TransactionsController < ApplicationController
     end
 
     return tmp
+    tmp.clear
   end
 
   # GET /transactions
