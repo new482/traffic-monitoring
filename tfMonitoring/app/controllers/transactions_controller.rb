@@ -67,6 +67,9 @@ class TransactionsController < ApplicationController
     getRange = $hbaseClient.get("hbase_hive", ["*"], "SingleColumnValueFilter('cf', 'time', "'>='", 'binary:#{dateFrom}') AND "+
               "SingleColumnValueFilter('cf', 'time', "'<='", 'binary:#{dateTo}')", {})
 
+    dateFrom.clear
+    dateTo.clear
+
     @hash = doSumHash(getRange) # Initiate Hash table to print in the dynamic OD table
     @a = doArrayEndPoint(getRange) # Initiate number of end-points in the dynamic OD table
 
