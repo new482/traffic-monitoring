@@ -59,9 +59,9 @@ class TransactionsController < ApplicationController
     dateFrom = temp1[2].to_s+'-'+temp1[0].to_s+'-'+temp1[1].to_s
     dateTo = temp2[2].to_s+'-'+temp2[0].to_s+'-'+temp2[1].to_s
 
-    if dateTo.include?('-')
-      dateTo = dateFrom
-    end
+    #if dateTo.include?('-')
+     # dateTo = dateFrom
+    #end
 
     # Return all the route in the request range from Hbase
     getRange = $hbaseClient.get("hbase_hive", ["*"], "SingleColumnValueFilter('cf', 'time', "'>='", 'binary:#{dateFrom}') AND "+
