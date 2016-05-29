@@ -9,7 +9,7 @@
                         OD Matrix
                     </a>
                 </li>
-              <%= form_tag transaction_generateOD_path, remote: true, method: :get do -%>
+              <%= form_tag transaction_generateOD_path(:format => 'js'), remote: true, method: :get do -%>
                 <li>
                   <%= text_field_tag :rangeFrom, 'Range from (click here)', class: 'datepicker'  %>
                 </li>

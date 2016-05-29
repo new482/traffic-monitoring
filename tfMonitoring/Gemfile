@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 #gem 'ruby-phoenix', '~> 0.0.8', require: 'phoenix'
 
+gem 'nokogiri'
+
 gem 'bootstrap-datepicker-rails'
 
 gem 'bootstrap-sass'

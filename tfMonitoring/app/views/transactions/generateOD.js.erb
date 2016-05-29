@@ -1,3 +1,32 @@
-$('#ODMatrixPanel').html('<table class="table table-bordered">' +
-    '<thead><tr><th class="info">OD Matrix</th><% for i in 0..@a.size-1 %><th class="info"><%= @a[i] %></th><% end %> </tr> </thead>' +
-    '<tbody><% for i in 0..@a.size-1 %><tr> <th scope="row" class="info"><%= @a[i] %></th><% for j in 0..@a.size-1 %><td><%= @hash[@a[i]+"-"+@a[j]] %></td><% end %></tr><% end %> </tbody> </table>');
+$('#ODMatrixPanel').html(
+    '<table class="table table-bordered">' +
+    '<thead>' +
+    '<tr>' +
+      '<th class="info">OD Matrix</th>'+
+        '<% for i in 0..$arrayOfEndPoint.size-1 %>' +
+      '<th class="info">' +
+        '<%= $arrayOfEndPoint[i] %>' +
+      '</th>' +
+        '<% end %>' +
+    '</tr> ' +
+    '</thead>' +
+
+    '<tbody>' +
+      '<% for i in 0..$arrayOfEndPoint.size-1 %>' +
+    '<tr>' +
+      '<th scope="row" class="info">' +
+        '<%= $arrayOfEndPoint[i] %>' +
+      '</th>' +
+      '<% for j in 0..$arrayOfEndPoint.size-1 %>' +
+      '<td>' +
+        '<%= $sumOfRoute[$arrayOfEndPoint[i]+"-"+$arrayOfEndPoint[j]] %>' +
+      '</td>' +
+          '<% end %>' +
+    '</tr>' +
+        '<% end %>' +
+    '</tbody>' +
+    '</table>' +
+    '<p> Download: ' +
+        '<%= link_to 'CSV', csv_event_path %>' +
+    '</p>'
+  );

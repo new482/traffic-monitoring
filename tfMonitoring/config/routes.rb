@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   get 'transaction/generateOD' => 'transactions#generateOD'
 
+  get 'transaction/getCSV' => 'transactions#getCSV', as: 'csv_event'
+
   #get 'transaction/get_vehicle_data.json' => 'transaction#get_vehicle_data'
   #delete 'transaction/remove_all_data' => 'transaction#remove_all_data'
 

@@ -7,12 +7,15 @@ class TransactionsController < ApplicationController
 
   require 'rest-client'
   require 'hbase_thrift_ruby'
+  require 'csv'
 
   $hbaseClient = ''
+  $sumOfRoute = ''
+  $arrayOfEndPoint = ''
+  $transport = ''
 
   #POST /transactions/set_vehicle_data.json
   def set_vehicle_data
-
     @existingRecord=Transaction.where('license_no = ?', params[:license_no]).first
 
     if !(@existingRecord.blank?)
@@ -23,7 +26,7 @@ class TransactionsController < ApplicationController
       time = @existingRecord.time.to_s
       var = route+'|'+license_no+'|'+time
       RestClient.post('http://localhost:5140', [{:headers => {:host => 'web'}, :body => var}].to_json)
-	    render :text => 'Data was sent :'
+	    render :text => 'Data was sent to the Hadoop cluster.'
       @existingRecord.delete
       # end Send
 
@@ -33,25 +36,25 @@ class TransactionsController < ApplicationController
       @transaction.license_no = params[:license_no]
       @transaction.time = params[:time]
       if @transaction.save
-        render :text => 'Data is buffered'
+        render :text => 'Data was buffered.'
       else
         render :status => :unprocessable_entity
       end
     end
-
   end
 
   def ensure_json_format
-
     if request.content_type != 'application/json'
-      render :text => 'Wrong FORMAT-Only JSON is acceptable', :status => 406
+      render :text => 'Wrong FORMAT!! Only JSON is accepted', :status => 406
     end
-
   end
 
 
   def generateOD
+    $sumOfRoute.clear
+    $arrayOfEndPoint.clear
 
+    $transport.open
 
     temp1 = params[:rangeFrom].split('/')
     temp2 = params[:rangeTo].split('/')
@@ -59,61 +62,86 @@ class TransactionsController < ApplicationController
     dateFrom = temp1[2].to_s+'-'+temp1[0].to_s+'-'+temp1[1].to_s
     dateTo = temp2[2].to_s+'-'+temp2[0].to_s+'-'+temp2[1].to_s
 
-    #if dateTo.include?('-')
-     # dateTo = dateFrom
-    #end
-
     # Return all the route in the request range from Hbase
-    getRange = $hbaseClient.get("hbase_hive", ["*"], "SingleColumnValueFilter('cf', 'time', "'>='", 'binary:#{dateFrom}') AND "+
-              "SingleColumnValueFilter('cf', 'time', "'<='", 'binary:#{dateTo}')", {})
+    getRange = $hbaseClient.get("hbase_hive", ["*"],
+                                "SingleColumnValueFilter('cf', 'time', "'>='", 'binary:#{dateFrom}') AND "+
+                                    "SingleColumnValueFilter('cf', 'time', "'<='", 'binary:#{dateTo}')", {})
 
-    dateFrom.clear
-    dateTo.clear
-
-    @hash = doSumHash(getRange) # Initiate Hash table to print in the dynamic OD table
-    @a = doArrayEndPoint(getRange) # Initiate number of end-points in the dynamic OD table
+    $sumOfRoute = doSumHash(getRange) # Initiate Hash table to print in the dynamic OD table
+    $arrayOfEndPoint = doArrayEndPoint(getRange) # Initiate number of end-points in the dynamic OD table
 
     respond_to do |format|
-      #format.html {redirect_to @transaction}
+      format.html {redirect_to @transaction}
       format.js #render transaction/generateOD.js.erb
     end
 
+    $transport.close
   end
 
   # Do Group by and Count for each entrypoint from Hbase
   def doSumHash(range)
-    sumTable = Hash.new
+    sumValue = Hash.new
 
     for i in 0..range.size-1
-      if sumTable[range[i][1]].nil?
-          sumTable[range[i][1]] = range[i][0].to_i
+      if sumValue[range[i][1]].nil?
+        sumValue[range[i][1]] = range[i][0].to_i
       else
-        sumTable[range[i][1]] = sumTable[range[i][1]].to_i + range[i][0].to_i
+        sumValue[range[i][1]] = sumValue[range[i][1]].to_i + range[i][0].to_i
       end
     end
 
-    return sumTable
-    sumTable.clear
+    return sumValue
+    sumValue.clear
   end
 
+  # Generate the header of the OD table
   def doArrayEndPoint(range)
-    tmp = Array.new
+    arrayEndPoint = Array.new
 
     for i in 0..range.size-1
       var1 = range[i][1].split('-')[0]
       var2 = range[i][1].split('-')[1]
-      if tmp.index(var1).nil?
-        tmp << var1
+
+      if arrayEndPoint.index(var1).nil?
+        arrayEndPoint << var1
       end
 
-      if tmp.index(var2).nil?
-        tmp << var2
+      if arrayEndPoint.index(var2).nil?
+        arrayEndPoint << var2
       end
     end
 
-    return tmp
-    tmp.clear
+    return arrayEndPoint
+    arrayEndPoint.clear
   end
+
+  # Generate the OD CSV file
+  def getCSV
+    tarray = Array.new
+
+    csv_data = CSV.generate do |csv|
+      tarray << 'OD Matrix'
+      for i in 0..$arrayOfEndPoint.size-1
+        tarray << $arrayOfEndPoint[i]
+      end
+
+      csv << tarray
+      tarray.clear
+
+      for i in 0..$arrayOfEndPoint.size-1
+        tarray << $arrayOfEndPoint[i]
+        for j in 0..$arrayOfEndPoint.size-1
+          tarray << $sumOfRoute[$arrayOfEndPoint[i]+"-"+$arrayOfEndPoint[j]]
+        end
+        csv << tarray
+        tarray.clear
+      end
+    end
+
+    send_data csv_data, :type => 'text/csv; charset=iso-8859-1; header=present',
+              :disposition => 'attachment; filename=OD_matrix.csv'
+  end
+
 
   # GET /transactions
   # GET /transactions.json
@@ -122,14 +150,12 @@ class TransactionsController < ApplicationController
     port = 9090
 
     socket = Thrift::Socket.new(host, port)
-    transport = Thrift::BufferedTransport.new(socket)
-    transport.open
-    protocol = Thrift::BinaryProtocol.new(transport)
+    $transport = Thrift::BufferedTransport.new(socket)
+    $transport.open
+    protocol = Thrift::BinaryProtocol.new($transport)
 
     $hbaseClient = HBase::Client.new(protocol)
-    @table = $hbaseClient.getTableNames
-
-
+    $transport.close
   end
 
   # GET /transactions/1
